@@ -44,7 +44,7 @@ def signup():
             users[new_username] = new_password  # Store password (Note: Hashing needed for production)
             save_users(users)
             st.success("✅ Signup successful! Please log in.")
-            st.experimental_rerun()
+            st.rerun()  # ✅ Corrected (was previously st.experimental_rerun())
         else:
             st.error("⚠️ Both fields are required!")
 
@@ -61,7 +61,7 @@ def login():
             st.session_state.authenticated = True
             st.session_state.username = username
             st.success(f"✅ Welcome back, {username}!")
-            st.experimental_rerun()  # Refresh page after login
+            st.rerun()  # ✅ Corrected (was previously st.experimental_rerun())
         else:
             st.error("❌ Invalid username or password")
 
@@ -69,7 +69,7 @@ def logout():
     """Logout function"""
     st.session_state.authenticated = False
     st.session_state.username = None
-    st.experimental_rerun()
+    st.rerun()
 
 # ---- App Authentication Logic ----
 if "authenticated" not in st.session_state:
