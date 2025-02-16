@@ -12,6 +12,45 @@ if not api_key:
     st.error("⚠️ OpenAI API key not found! Please check your .env file.")
     st.stop()  # Stop execution if API key is missing
 
+# ---- Authentication Setup ----
+# Hardcoded credentials (For testing only! Use a database in production)
+USER_CREDENTIALS = {
+    "admin": "password123",
+    "guest": "joketopushero"
+}
+
+# Check if user is authenticated
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+def login():
+    """Authenticate user"""
+    username = st.text_input("Username", key="username")
+    password = st.text_input("Password", type="password", key="password")
+
+    if st.button("Login"):
+        if username in USER_CREDENTIALS and USER_CREDENTIALS[username] == password:
+            st.session_state.authenticated = True
+            st.session_state.username = username
+            st.success(f"✅ Welcome, {username}!")
+            st.experimental_rerun()  # Refresh page after login
+        else:
+            st.error("❌ Invalid username or password")
+
+def logout():
+    """Logout function"""
+    st.session_state.authenticated = False
+    st.session_state.username = ""
+    st.experimental_rerun()
+
+# ---- App Authentication Logic ----
+
+if not st.session_state.authenticated:
+    login()
+else:
+    # Show logout button
+    st.sidebar.button("Logout", on_click=logout)
+
 # Initialize OpenAI Client
 client = openai.OpenAI(api_key=api_key)
 
